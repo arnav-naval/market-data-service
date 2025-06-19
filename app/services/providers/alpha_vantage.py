@@ -1,17 +1,8 @@
-from abc import ABC, abstractmethod
 import httpx
 from datetime import datetime, timezone
 from app.schemas.market_data import PriceResponse
 from app.core.config import settings
-
-
-class MarketDataProvider(ABC):
-    """Abstract base class for market data providers"""
-    
-    @abstractmethod
-    async def get_latest_price(self, symbol: str) -> PriceResponse:
-        """Fetch the latest price for a given symbol"""
-        pass
+from .base import MarketDataProvider
 
 
 class AlphaVantageProvider(MarketDataProvider):
@@ -48,16 +39,4 @@ class AlphaVantageProvider(MarketDataProvider):
                 price=price,
                 timestamp=timestamp,
                 provider="alpha_vantage"
-            )
-
-
-class ProviderFactory:
-    """Factory for creating market data providers"""
-    
-    @staticmethod
-    def get_provider(provider_name: str) -> MarketDataProvider:
-        """Get a provider instance by name"""
-        if provider_name == "alpha_vantage":
-            return AlphaVantageProvider()
-        else:
-            raise ValueError(f"Unsupported provider: {provider_name}") 
+            ) 
