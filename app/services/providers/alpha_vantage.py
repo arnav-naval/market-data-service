@@ -1,14 +1,15 @@
 import httpx
 from datetime import datetime, timezone
+from fastapi import Depends
 from app.schemas.market_data import PriceResponse
-from app.core.config import settings
+from app.core.config import Settings, get_settings
 from .base import MarketDataProvider
 
 
 class AlphaVantageProvider(MarketDataProvider):
     """Alpha Vantage market data provider implementation"""
     
-    def __init__(self):
+    def __init__(self, settings: Settings = Depends(get_settings)):
         self.api_key = settings.ALPHA_VANTAGE_API_KEY
         self.base_url = "https://www.alphavantage.co/query"
         self.rate_limit = 5  # calls per minute

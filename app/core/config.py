@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from functools import lru_cache
 
 class Settings(BaseSettings):
     """Application settings with environment variable support"""
@@ -11,8 +12,10 @@ class Settings(BaseSettings):
     APP_NAME: str = "Market Data Service"
     
     class Config:
-        env_file = ".env"  # Same as require('dotenv').config()
+        env_file = ".env" 
 
 
-# Global instance (like module.exports in Node.js)
-settings = Settings() 
+@lru_cache()
+def get_settings() -> Settings:
+    """Dependency function to get settings"""
+    return Settings() 
