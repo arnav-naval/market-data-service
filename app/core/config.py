@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     # Alpha Vantage API
     ALPHA_VANTAGE_API_KEY: str = "default"
     
+    # Database settings
+    DATABASE_URL: str = "postgresql://user:password@localhost/market_data"
+    
     # App settings
     DEBUG: bool = False
     APP_NAME: str = "Market Data Service"
