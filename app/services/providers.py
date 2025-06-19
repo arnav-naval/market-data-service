@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 import httpx
 from datetime import datetime, timezone
 from app.schemas.market_data import PriceResponse
+from app.core.config import settings
 
 
 class MarketDataProvider(ABC):
@@ -17,9 +17,10 @@ class MarketDataProvider(ABC):
 class AlphaVantageProvider(MarketDataProvider):
     """Alpha Vantage market data provider implementation"""
     
-    def __init__(self, api_key: str = "demo"):
-        self.api_key = api_key
+    def __init__(self):
+        self.api_key = settings.ALPHA_VANTAGE_API_KEY
         self.base_url = "https://www.alphavantage.co/query"
+        self.rate_limit = 5  # calls per minute
     
     async def get_latest_price(self, symbol: str) -> PriceResponse:
         """Fetch the latest price from Alpha Vantage API"""

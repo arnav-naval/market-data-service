@@ -7,7 +7,10 @@ router = APIRouter()
 
 # Endpoints
 @router.get("/prices/latest", response_model=PriceResponse)
-async def get_latest_price(symbol: str, provider: Optional[str] = "alpha_vantage") -> PriceResponse:
+async def get_latest_price(
+    symbol: str, 
+    provider: Optional[str] = "alpha_vantage"
+) -> PriceResponse:
     """
     Get the latest price for a given symbol
     """
