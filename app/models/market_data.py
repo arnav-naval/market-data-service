@@ -1,20 +1,26 @@
-from sqlalchemy import Column, Integer, String, DateTime, JSON, Index
-from sqlalchemy.sql import func
+import uuid
+from sqlalchemy import Column, String, DateTime, JSON, ForeignKey, Index
+from enum import Enum
+from sqlalchemy.orm import relationship
 from app.core.database import Base
+from .jobs import ProviderEnum
 
 class RawMarketData(Base):
-    """Raw market data responses from providers"""
     __tablename__ = "raw_market_data"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    symbol = Column(String(20), nullable=False, index=True)
-    provider = Column(String(50), nullable=False)
+
+    id           = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    symbol       = Column(String, index=True, nullable=False)
+    provider     = Column(Enum(ProviderEnum), nullable=False)
+    timestamp    = Column(DateTime(timezone=True), index=True, nullable=False)
     raw_response = Column(JSON, nullable=False)
-    timestamp = Column(DateTime(timezone=True), server_default=func.now(), index=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
-    # Indexes for performance
+
+    job_id = Column(String, ForeignKey("polling_job_configs.id"), nullable=True)
+    job    = relationship("PollingJobConfig", back_populates="raw_responses")
+
+    # one-to-one link to the parsed price-point
+    price_point = relationship("PricePoint", uselist=False, back_populates="raw_data")
+
+    # composite index
     __table_args__ = (
-        Index('idx_raw_market_data_symbol_timestamp', 'symbol', 'timestamp'),
-        Index('idx_raw_market_data_provider_timestamp', 'provider', 'timestamp'),
-    ) 
+        Index("ix_raw_symbol_ts", "symbol", "timestamp"),
+    )
