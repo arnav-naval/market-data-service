@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     # Database settings
     DATABASE_URL: str = "postgresql://user:password@localhost/market_data"
     
+    # Redis settings
+    REDIS_URL: str = "redis://localhost:6379"
+    REDIS_DB: int = 0
+    REDIS_PASSWORD: str = ""
+    REDIS_CACHE_TTL: int = 60  # 1 minutes cache TTL
+    
     # App settings
     DEBUG: bool = False
     APP_NAME: str = "Market Data Service"
