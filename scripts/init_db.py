@@ -1,23 +1,36 @@
 #!/usr/bin/env python3
 """
-Simple database initialization script for Market Data Service.
-Creates PostgreSQL tables using SQLAlchemy.
+Database initialization script for Market Data Service.
+Uses Alembic to create and manage database tables.
 """
 
 import sys
 import os
+import subprocess
 
 # Add the app directory to the Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from app.core.database import engine, Base
-from app.models import RawMarketData  # Import to register with Base
-
 def init_database():
-    """Create all database tables"""
-    print("Creating database tables...")
-    Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully!")
+    """Initialize database using Alembic"""
+    print("Initializing database with Alembic...")
+    
+    try:
+        # Generate initial migration if none exists
+        print("Generating initial migration...")
+        subprocess.run(["alembic", "revision", "--autogenerate", "-m", "Initial migration"], 
+                      check=True, cwd=os.path.dirname(os.path.dirname(__file__)))
+        
+        # Apply the migration
+        print("Applying migration...")
+        subprocess.run(["alembic", "upgrade", "head"], 
+                      check=True, cwd=os.path.dirname(os.path.dirname(__file__)))
+        
+        print("Database initialized successfully!")
+        
+    except subprocess.CalledProcessError as e:
+        print(f"Error initializing database: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     init_database() 

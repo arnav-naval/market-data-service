@@ -1,6 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, JSON, ForeignKey, Index
-from enum import Enum
+from sqlalchemy import Column, String, DateTime, JSON, ForeignKey, Index, Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 from .jobs import ProviderEnum
@@ -10,7 +9,7 @@ class RawMarketData(Base):
 
     id           = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     symbol       = Column(String, index=True, nullable=False)
-    provider     = Column(Enum(ProviderEnum), nullable=False)
+    provider     = Column(SQLAlchemyEnum(ProviderEnum), nullable=False)
     timestamp    = Column(DateTime(timezone=True), index=True, nullable=False)
     raw_response = Column(JSON, nullable=False)
 

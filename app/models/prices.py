@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Index, Enum
+from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Index, Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 from .jobs import ProviderEnum
@@ -9,7 +9,7 @@ class PricePoint(Base):
 
     id        = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     symbol    = Column(String, index=True, nullable=False)
-    provider  = Column(Enum(ProviderEnum), nullable=False)
+    provider  = Column(SQLAlchemyEnum(ProviderEnum), nullable=False)
     timestamp = Column(DateTime(timezone=True), index=True, nullable=False)
     price     = Column(Float, nullable=False)
 
