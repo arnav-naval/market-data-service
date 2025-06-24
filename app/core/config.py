@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     """Application settings with environment variable support"""
     
     # Alpha Vantage API
-    ALPHA_VANTAGE_API_KEY: str = "MF0YI7Q7WYR9SGJ1"
+    ALPHA_VANTAGE_API_KEY: str = "default"
     
     # Database settings
     DATABASE_URL: str = "postgresql+asyncpg://arnav:market123@postgres:5432/market_data"
