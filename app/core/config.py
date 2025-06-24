@@ -5,16 +5,24 @@ class Settings(BaseSettings):
     """Application settings with environment variable support"""
     
     # Alpha Vantage API
-    ALPHA_VANTAGE_API_KEY: str = "default"
+    ALPHA_VANTAGE_API_KEY: str = "MF0YI7Q7WYR9SGJ1"
     
     # Database settings
-    DATABASE_URL: str = "postgresql://user:password@localhost/market_data"
+    DATABASE_URL: str = "postgresql+asyncpg://arnav:market123@postgres:5432/market_data"
     
     # Redis settings
-    REDIS_URL: str = "redis://localhost:6379"
+    REDIS_URL: str = "redis://redis:6379"
     REDIS_DB: int = 0
     REDIS_PASSWORD: str = ""
     REDIS_CACHE_TTL: int = 60  # 1 minutes cache TTL
+    
+    # Kafka settings
+    KAFKA_BOOTSTRAP_SERVERS: str = "kafka:29092"
+    KAFKA_PRICE_EVENTS_TOPIC: str = "price-events"
+    KAFKA_SECURITY_PROTOCOL: str = "PLAINTEXT"
+    KAFKA_SASL_MECHANISM: str = ""
+    KAFKA_SASL_USERNAME: str = ""
+    KAFKA_SASL_PASSWORD: str = ""
     
     # App settings
     DEBUG: bool = False

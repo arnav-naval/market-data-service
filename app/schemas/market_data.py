@@ -18,4 +18,12 @@ class PollRequest(BaseModel):
 class PollResponse(BaseModel):
     job_id: str
     status: str
-    config: dict 
+    config: dict
+
+# PriceEvent schema for Kafka messages
+class PriceEvent(BaseModel):
+    symbol: str
+    price: float
+    timestamp: str
+    source: str
+    raw_response_id: str 

@@ -24,7 +24,9 @@ target_metadata = Base.metadata
 
 # Override the sqlalchemy.url with the DATABASE_URL from settings
 settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Convert async URL to sync URL for Alembic
+sync_url = settings.DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
+config.set_main_option("sqlalchemy.url", sync_url)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
