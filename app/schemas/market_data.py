@@ -20,6 +20,15 @@ class PollResponse(BaseModel):
     status: str
     config: dict
 
+# PricePoint schema
+class PricePoint(BaseModel):
+    id: str
+    symbol: str
+    price: float
+    timestamp: str
+    provider: str
+    raw_response_id: str
+
 # PriceEvent schema for Kafka messages
 class PriceEvent(BaseModel):
     symbol: str

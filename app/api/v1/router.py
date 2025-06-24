@@ -22,8 +22,8 @@ async def get_latest_price(
     try:
         market_data_service = get_market_data_service()
         
-        # Check if we have a recent processed price in cache/database
-        cached_price = await market_data_service.get_latest_processed_price(symbol, db)
+        # Check if we have a recent processed price in Redis
+        cached_price = await market_data_service.get_latest_processed_price(symbol)
         if cached_price:
             return cached_price
         
