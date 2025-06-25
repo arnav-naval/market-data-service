@@ -1,0 +1,5 @@
+06/23:
+-Fix config and env file to secure API keys
+-Implement Kafka consumer
+-Implement Moving average logic
+-Implement polling and polling job logic

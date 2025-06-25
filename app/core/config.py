@@ -8,10 +8,10 @@ class Settings(BaseSettings):
     ALPHA_VANTAGE_API_KEY: str = "default"
     
     # Database settings
-    DATABASE_URL: str = "postgresql+asyncpg://arnav:market123@postgres:5432/market_data"
+    DATABASE_URL: str = "default"
     
     # Redis settings
-    REDIS_URL: str = "redis://redis:6379"
+    REDIS_URL: str = "default"
     REDIS_DB: int = 0
     REDIS_PASSWORD: str = ""
     REDIS_CACHE_TTL: int = 60  # 1 minutes cache TTL
