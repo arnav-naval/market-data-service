@@ -18,6 +18,23 @@ services:
     networks:
       - market-data-network
 
+  # Kafka Consumer Service
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://arnav:market123@postgres:5432/market_data
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - KAFKA_PRICE_EVENTS_TOPIC=price-events
+      - KAFKA_SECURITY_PROTOCOL=PLAINTEXT
+    depends_on:
+      - postgres
+      - kafka
+    restart: unless-stopped
+    networks:
+      - market-data-network
+
   # PostgreSQL Database
   postgres:
     image: postgres:15

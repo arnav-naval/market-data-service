@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     ALPHA_VANTAGE_API_KEY: str = "default"
     
     # Database settings
-    DATABASE_URL: str = "default"
+    DATABASE_URL: str = "postgresql+asyncpg://arnav:market123@postgres:5432/market_data"
     
     # Redis settings
     REDIS_URL: str = "default"
@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     REDIS_CACHE_TTL: int = 60  # 1 minutes cache TTL
     
     # Kafka settings
-    KAFKA_BOOTSTRAP_SERVERS: str = "kafka:29092"
+    KAFKA_BOOTSTRAP_SERVERS: str = "localhost:9092"
     KAFKA_PRICE_EVENTS_TOPIC: str = "price-events"
     KAFKA_SECURITY_PROTOCOL: str = "PLAINTEXT"
     KAFKA_SASL_MECHANISM: str = ""
