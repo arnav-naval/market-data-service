@@ -21,7 +21,7 @@ class MovingAverage(Base):
     trigger_price_point_id = Column(String, ForeignKey("price_points.id"), nullable=False)
     trigger_price_point = relationship("PricePoint", back_populates="triggered_moving_averages")
 
-    # ensure one MA record per (symbol, interval, timestamp)
+    # ensure one MA record per symbol per interval per timestamp
     __table_args__ = (
         UniqueConstraint("symbol", "interval", "timestamp", name="uq_symbol_interval_timestamp"),
         Index("ix_ma_symbol_interval_ts", "symbol", "interval", "timestamp"),

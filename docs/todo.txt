@@ -6,5 +6,12 @@ X -Fix config and env file to secure API keys:
 X -Implement Kafka consumer:
     -test scripts for consumer cant find postgres db
 X -Implement Moving average logic
-    -modify consumer logic to upsert instead of insert for each symbol
+    X -modify consumer logic to upsert instead of insert for each symbol
 -Implement polling and polling job logic
+X -Add in pytest
+    X -Implement simple end to end test
+    -Implement end to end testing
+-Add in prometheus to monitor metrics
+-Add in grafana to visualize metrics
+-Host docker containers on EC2
+-Set up github actions to build on EC2

@@ -4,7 +4,7 @@ import asyncio
 import signal
 import sys
 from typing import List, Optional
-from sqlalchemy import select, desc
+from sqlalchemy import select, desc, func
 from confluent_kafka import Consumer, KafkaError
 from app.core.config import Settings, get_settings
 from app.core.database import async_session
@@ -65,8 +65,9 @@ class KafkaConsumerService:
         return total / len(recent_prices)
     
     async def _store_moving_average(self, symbol: str, moving_average: float, trigger_price: PricePoint) -> None:
-        """Store the calculated moving average in the database"""
+        """Store the calculated moving average in the database using proper upsert logic"""
         async with async_session() as session:
+            # Use SQLAlchemy merge for proper upsert (INSERT ... ON CONFLICT DO UPDATE)
             ma = MovingAverage(
                 symbol=symbol,
                 interval=5,
@@ -76,38 +77,52 @@ class KafkaConsumerService:
                 trigger_price_point_id=trigger_price.id
             )
             
-            session.add(ma)
+            # Merge will either insert new record or update existing one based on unique constraint
+            merged_ma = await session.merge(ma)
             await session.commit()
-            logger.info(f"Stored 5-point MA for {symbol}: {moving_average}")
+            
+            logger.info(f"Upserted 5-point MA for {symbol}: {moving_average}")
     
     async def _process_price_event(self, price_event: PriceEvent) -> None:
         """Process a single price event and calculate moving average if possible"""
         try:
             async with async_session() as session:
                 # Find the price point associated with this raw response
+                # Use a more explicit query to avoid multiple results
                 price_query = select(PricePoint).join(RawMarketData).where(
                     RawMarketData.id == price_event.raw_response_id
-                )
+                ).order_by(desc(PricePoint.timestamp))
                 result = await session.execute(price_query)
-                trigger_price = result.scalar_one_or_none()
+                price_points = result.scalars().all()
                 
-                if not trigger_price:
+                logger.info(f"Found {len(price_points)} price points for raw_response_id {price_event.raw_response_id}")
+                
+                if not price_points:
                     logger.warning(f"Price point not found for raw response ID: {price_event.raw_response_id}")
                     return
                 
+                # Take the most recent price point
+                trigger_price = price_points[0]
+                logger.info(f"Using trigger price: {trigger_price.price} for symbol {trigger_price.symbol}")
+                
                 # Get recent prices for the symbol
                 recent_prices = await self._get_recent_prices(price_event.symbol, 5)
+                logger.info(f"Got {len(recent_prices)} recent prices: {[p.price for p in recent_prices]}")
                 
                 # Calculate moving average if we have enough data
                 moving_average = await self._calculate_moving_average(recent_prices)
                 
                 if moving_average is not None:
+                    logger.info(f"Calculated moving average: {moving_average}")
                     await self._store_moving_average(price_event.symbol, moving_average, trigger_price)
                 else:
                     logger.debug(f"Insufficient data for MA calculation for {price_event.symbol}")
                     
         except Exception as e:
             logger.error(f"Error processing price event for {price_event.symbol}: {e}")
+            # Log more details about the error
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
     
     async def start_consuming(self) -> None:
         """Start consuming messages from Kafka"""

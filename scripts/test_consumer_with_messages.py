@@ -33,7 +33,7 @@ async def setup_test_data():
             raw_data = RawMarketData(
                 id=str(uuid.uuid4()),
                 symbol="TEST",
-                provider="test_provider",
+                provider="alpha_vantage",
                 raw_response={"test": "data"},
                 timestamp=datetime.now(timezone.utc)
             )
@@ -46,7 +46,7 @@ async def setup_test_data():
                     symbol="TEST",
                     price=100.0 + i,  # 100, 101, 102, 103, 104
                     timestamp=datetime.now(timezone.utc),
-                    provider="test_provider",
+                    provider="alpha_vantage",
                     raw_market_data_id=raw_data.id
                 )
                 session.add(price_point)
@@ -71,7 +71,7 @@ async def publish_test_message(raw_response_id: str):
             symbol="TEST",
             price=105.0,
             timestamp=datetime.now(timezone.utc).isoformat(),
-            source="test_provider",
+            source="alpha_vantage",
             raw_response_id=raw_response_id
         )
         
