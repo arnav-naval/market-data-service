@@ -76,10 +76,17 @@ class TestEndToEndFlow:
         assert min_price <= latest_ma.moving_average <= max_price, \
             f"MA {latest_ma.moving_average} should be between {min_price} and {max_price}"
         
+        # Verify mathematical accuracy - should be average of 5 most recent prices
+        recent_prices = price_values[:5]  # 5 most recent prices
+        expected_ma = sum(recent_prices) / len(recent_prices)
+        assert abs(latest_ma.moving_average - expected_ma) < 0.01, \
+            f"MA calculation error: expected {expected_ma}, got {latest_ma.moving_average}"
+        
         print(f"  - Symbol: {latest_ma.symbol}")
         print(f"  - Interval: {latest_ma.interval}")
         print(f"  - Price count: {latest_ma.price_count}")
         print(f"  - Valid range: [{min_price}, {max_price}]")
+        print(f"  - Expected MA: {expected_ma:.2f}, Actual MA: {latest_ma.moving_average:.2f}")
         
     @pytest.mark.asyncio
     async def test_multiple_price_events_sequential(
@@ -139,7 +146,14 @@ class TestEndToEndFlow:
         assert min_price <= latest_ma.moving_average <= max_price, \
             f"MA {latest_ma.moving_average} should be between {min_price} and {max_price}"
         
+        # Verify mathematical accuracy - should be average of 5 most recent prices
+        recent_prices = price_values[:5]  # 5 most recent prices
+        expected_ma = sum(recent_prices) / len(recent_prices)
+        assert abs(latest_ma.moving_average - expected_ma) < 0.01, \
+            f"MA calculation error: expected {expected_ma}, got {latest_ma.moving_average}"
+        
         print(f"✓ Moving average {latest_ma.moving_average} is within valid range [{min_price}, {max_price}]")
+        print(f"✓ Mathematical verification: expected {expected_ma:.2f}, actual {latest_ma.moving_average:.2f}")
         
     @pytest.mark.asyncio
     async def test_moving_average_calculation_accuracy(
