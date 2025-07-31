@@ -1,7 +1,3 @@
-# **Work Trial Assignment**
-
-**Duration: 3 days** (10 hours approx.)
-
 **Expected Timeline:**
 
 - **Task 1:** Setup & Core API (2 hrs)
