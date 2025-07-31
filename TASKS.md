@@ -221,12 +221,3 @@ async def test_get_latest_price():
 ```
 
 End-to-end pipeline verification: fetch → DB → Kafka → MA storage.
-
-**Provide a Postman/Insomnia collection with environments & test scripts.**
-
-✅ **Required Deliverables:**
-
-1. **Private GitHub repository with consistent, meaningful commits**
-2. **Detailed README.md file with setup instructions, architecture overview, and API documentation**
-3. **5-minute video walkthrough (*mandatory*)**
-4. **Grant hiring team access (add Yuvraj1907 as a collaborator)**
